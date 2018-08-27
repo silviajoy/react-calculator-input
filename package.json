@@ -1,5 +1,5 @@
 {
-  "name": "react-numeric-input",
+  "name": "react-calculator-input",
   "version": "0.1.0",
   "description": "A React component for npm, consisting of a numeric input that pops up as a calculator.",
   "main": "lib/index.js",

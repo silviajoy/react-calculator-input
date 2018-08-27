@@ -1,0 +1,146 @@
+#input {
+    font-size: 24px;
+}
+
+.dnone {
+    display: none;
+}
+
+.dflex {
+    display: flex;
+}
+
+.numericinput {
+    display: inline-block;
+}
+
+.numericinput input::-webkit-inner-spin-button, .numericinput input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    -moz-appearance:textfield;
+}
+
+.calculator-wrapper {
+    position: absolute;
+    font-size: 30px;
+}
+
+.calculator-wrapper:focus {
+    border: none;
+    outline: none;
+}
+
+.calculator {
+    display: flex;
+    flex-direction: column;
+    background-color: #666;
+    width: 14.8em;
+    border-radius: 4px;
+    padding: 0.3em;
+    padding-top: 0.1em;
+}
+
+.close {
+    margin-right: .3em;
+}
+
+.close p {
+    text-align: right;
+    color: #eee;
+    font-family: sans-serif;
+    font-weight: bold;
+    margin-top: 0.3em;
+    margin-bottom: 0.1em;
+    float: right;
+    cursor: pointer;
+    width: 1em;
+}
+
+.calculator-keyboard {
+    display: flex;
+}
+
+.calculator-right {
+    margin-left: 1em;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    align-content: space-between;
+}
+
+.calculator-operations {
+    flex: 1;
+}
+
+.calculator-display .display {
+    border: .08em solid #666;
+    border-radius: 0;
+    height: 2em;
+    margin: 0.3em;
+    margin-bottom: 1em;
+    display: flex;
+    background-color: #eee;
+    overflow-x: auto;
+    /*
+    Overflow to left attempt
+    (flips math signs, so fix needed)
+    direction: rtl;
+    unicode-bidi: embed;
+    */
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.calculator-display .display p {
+    margin: auto;
+    margin-right: 0.5em;
+    text-align: right;
+    font-family: monospace;
+    color: #666;
+}
+
+.numerickeys {
+    display: flex;
+    flex-direction: column;
+
+}
+
+.numerickeys-row {
+    display: flex;
+}
+
+.numericops {
+    display: flex;
+    flex-direction: column;
+
+}
+
+.numericops-row {
+    display: flex;
+}
+
+.numerickeys .button, .confirmbutton, .numericops .button {
+    border: .08em solid #666;
+    border-radius: 10px;
+    height: 2em;
+    width: 2em;
+    display: flex;
+    margin: .3em;
+    cursor: pointer;
+    background-color: #ccc;
+}
+
+.numerickeys .button:active, .confirmbutton:active, .numericops .button:active {
+    background-color: #f1f1f1;
+    color: #5a5a5a;
+}
+
+.numerickeys .button p, .confirmbutton p, .numericops .button p{
+    margin: auto;
+    font-family: monospace;
+}
+
+.confirmbutton {
+    width: 4.76em;
+    margin-bottom: auto;
+}
