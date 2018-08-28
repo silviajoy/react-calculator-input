@@ -1,6 +1,5 @@
 import React, { Component } from "react"
 import Calculator from './Calculator'
-import  "./numeric-input.css"
 
 class NumericInput extends Component {
     
