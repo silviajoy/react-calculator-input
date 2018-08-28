@@ -40,6 +40,9 @@
     "webpack-node-externals": "^1.7.2"
   },
   "author": "Silvia Gioia Florio <floriosg@gmail.com>",
+  "contributors": [
+    "Luca Monfredo <luca@monfredo.it>"
+  ],
   "homepage": "https://github.com/silviajoy/numeric-input-component",
   "repository": {
     "type": "git",
