@@ -8,21 +8,23 @@ class NumericInput extends Component {
         super(props)
         this.state = {
             className: "dnone",
-            inputValue: "",
+            inputValue: 0,
             displayValue: "0",
         };
         this.inputRef = React.createRef();
     }
 
     onFocus = () => {
-        this.setState({className:"dflex"})
+        // reset calculator state everytime it gets focus
+        this.setState({className: "dflex", inputValue: 0, displayValue: '0'});
     }
 
     onComplete = () => {
-        var total = eval(this.state.displayValue)
-        this.setState({className:"dnone", inputValue:total})
-        this.inputRef.current.value = total
-        this.proxyOnChangeOnRef(this.inputRef);
+        var total = eval(this.state.displayValue);
+        this.setState(
+            {className:"dnone", inputValue: total, displayValue: total.toString()},
+            this.proxyOnChangeOnRefWithValue(this.inputRef, total)
+        );
     }
 
     onChangeDisplay = (val) => {
@@ -37,7 +39,7 @@ class NumericInput extends Component {
             if(newValue == '') {
                 newValue = '0'
             }
-            this.setState({displayValue: newValue})
+            this.setState({displayValue: newValue});
             return
         }
 
@@ -64,21 +66,26 @@ class NumericInput extends Component {
           }
         } 
 
-
-        this.setState({displayValue:newValue})
+        this.setState({displayValue:newValue});
     }
 
     handleChange = (event) => {
-        this.setState({inputValue: event.target.value, displayValue: event.target.value});
-        this.proxyOnChangeOnRef(this.inputRef);
+        const parsedValue = parseInt(event.target.value, 10);
+        const value = isNaN(parsedValue) ? 0 : parsedValue;
+        const stringValue = value.toString();
+        this.setState(
+            {inputValue: value, displayValue: stringValue},
+            this.proxyOnChangeOnRefWithValue(this.inputRef, value)
+        );
     }
 
     onBlur = () => {
         setTimeout(() => {
             var active = document.activeElement
             if(!active.classList.contains("calculator-wrapper") || active.id == this.props.id) {
-                this.setState({className:"dnone"})
-        }
+                // reset calculator state everytime it blurs
+                this.setState({className: "dnone", inputValue: 0, displayValue: '0'});
+            }
         }, 1);
 
     }
@@ -87,32 +94,44 @@ class NumericInput extends Component {
         this.setState({className:"dnone"})
     }
 
-    proxyOnChangeOnRef(ref) {
+    proxyOnChangeOnRefWithValue = (ref, value) => {
         if (typeof this.props.onChange !== 'function') return;
         const event = new Event('change', { bubbles: true });
-        Object.defineProperty(event, 'target', {value: ref.current, enumerable: true});
+        Object.defineProperty(event, 'target', {value: ref.current, enumerable: true, writable: true});
+        event.target.value = value.toString();
         this.props.onChange(event);
     }
 
-    render() {
+    sanitizeRenderProps = (props) => {
+        delete props.ref;
+        delete props.type;
+        delete props.onFocus;
+        delete props.onChange;
+        delete props.onBlur;
+        return props;
+    }
 
+    render() {
+        const props = Object.assign({}, this.props);
+        const { label: labelProps, ...inputProps } = this.sanitizeRenderProps(props);
         return (
             <div className="numeric-input-component">
                 <input
                     ref={this.inputRef}
-                    id={this.props.id}
-                    className={this.props.className}
+                    id={props.id}
+                    className={props.className}
                     type="number"
-                    name={this.props.name}
-                    onFocus={ this.onFocus }
+                    name={props.name}
+                    onFocus={this.onFocus}
                     value={this.state.inputValue}
                     onChange={this.handleChange}
                     onBlur={this.onBlur}
+                    {...inputProps}
                 />
-                {this.props.label ? (<label htmlFor={this.props.id}>{this.props.label}</label>) : null}
+                {props.label ? (<label htmlFor={props.id}>{props.label}</label>) : null}
                 <div className={ "calculator-wrapper " + this.state.className } tabIndex="-1">
                     <Calculator
-                        onComplete={ this.onComplete }
+                        onComplete={this.onComplete}
                         displayValue={this.state.displayValue}
                         onChangeDisplay={this.onChangeDisplay}
                         close={this.onClose}
