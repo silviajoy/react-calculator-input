@@ -29,9 +29,11 @@ class NumericInput extends Component {
         var currentVal = this.state.displayValue
         var newValue = val.toString()
 
+
         /* delete */
         if(val==='<') {
             newValue = currentVal.slice(0,-1)
+            /* avoid blank screen */
             if(newValue == '') {
                 newValue = '0'
             }
@@ -40,18 +42,28 @@ class NumericInput extends Component {
         }
 
         /* avoid double . insertion */
-        if(val==='.' && currentVal.includes(".")){
+        var lastNumber = currentVal.split(/\-|\+|\/|\*/).pop()
+        if(val==='.' && lastNumber.includes(".")){
             return
         }
 
-        /* if it's not the first character or if next value is . */
-        if(currentVal != '0' || val == '.') {
+        /* if it's not the first character or if next value is . */  
+        if (currentVal != '0' || val == '.') {
             if(currentVal == '') {
                 newValue = `0${val}`
             } else {
                 newValue = `${currentVal}${val}`;    
             }
         }
+
+        var lastCharacter = currentVal.split('').pop()
+        if(['+', '-', '*', '/'].includes(lastCharacter)) {
+          /* avoid consecutive operation insertion */
+          if(['+', '-', '*', '/'].includes(val)) {
+              newValue = `${currentVal.slice(0,-1)}${val}`
+          }
+        } 
+
 
         this.setState({displayValue:newValue})
     }

@@ -17,6 +17,7 @@ const Calculator = ({close, displayValue, onChangeDisplay, onComplete}) => {
                     <NumericKeys onNumberClick={(number) => {onChangeDisplay(number)}} leftKey="." rightKey="<" />
                     <div className="calculator-right">
                         <ConfirmButton confirmText="OK" onComplete={onComplete} />
+                        <NumericOps onOperationClick={(op) => {onChangeDisplay(op)} } />
                     </div>
                 </div>
 
