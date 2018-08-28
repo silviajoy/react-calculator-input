@@ -1,8 +1,9 @@
 import React, { Component } from "react"
 import Calculator from './Calculator'
+import './index.scss'
 
 class NumericInput extends Component {
-    
+
     constructor(props) {
         super(props)
         this.state = {
@@ -10,6 +11,7 @@ class NumericInput extends Component {
             inputValue: "",
             displayValue: "0",
         };
+        this.inputRef = React.createRef();
     }
 
     onFocus = () => {
@@ -18,7 +20,9 @@ class NumericInput extends Component {
 
     onComplete = () => {
         var total = eval(this.state.displayValue)
-        this.setState({className:"dnone", inputValue:total})  
+        this.setState({className:"dnone", inputValue:total})
+        this.inputRef.current.value = total
+        this.proxyOnChangeOnRef(this.inputRef);
     }
 
     onChangeDisplay = (val) => {
@@ -54,6 +58,7 @@ class NumericInput extends Component {
 
     handleChange = (event) => {
         this.setState({inputValue: event.target.value, displayValue: event.target.value});
+        this.proxyOnChangeOnRef(this.inputRef);
     }
 
     onBlur = () => {
@@ -70,14 +75,36 @@ class NumericInput extends Component {
         this.setState({className:"dnone"})
     }
 
+    proxyOnChangeOnRef(ref) {
+        if (typeof this.props.onChange !== 'function') return;
+        const event = new Event('change', { bubbles: true });
+        Object.defineProperty(event, 'target', {value: ref.current, enumerable: true});
+        this.props.onChange(event);
+    }
+
     render() {
 
         return (
-            <div className="numericinput">
-                <input id={this.props.id} type="number" name={this.props.name} onFocus={ this.onFocus } value={this.state.inputValue} onChange={this.handleChange} onBlur={this.onBlur} />
-                <label htmlFor={this.props.id}>{this.props.label}</label>
+            <div className="numeric-input-component">
+                <input
+                    ref={this.inputRef}
+                    id={this.props.id}
+                    className={this.props.className}
+                    type="number"
+                    name={this.props.name}
+                    onFocus={ this.onFocus }
+                    value={this.state.inputValue}
+                    onChange={this.handleChange}
+                    onBlur={this.onBlur}
+                />
+                {this.props.label ? (<label htmlFor={this.props.id}>{this.props.label}</label>) : null}
                 <div className={ "calculator-wrapper " + this.state.className } tabIndex="-1">
-                    <Calculator onComplete={ this.onComplete } displayValue={this.state.displayValue} onChangeDisplay={this.onChangeDisplay} close={this.onClose} />
+                    <Calculator
+                        onComplete={ this.onComplete }
+                        displayValue={this.state.displayValue}
+                        onChangeDisplay={this.onChangeDisplay}
+                        close={this.onClose}
+                    />
                 </div>
             </div>
         );
