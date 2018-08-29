@@ -19,9 +19,11 @@ class NumericInput extends Component {
 
     onComplete = () => {
         var total = eval(this.state.displayValue).toFixed(4);
-        console.log(total)
+        const parsedValue = this.props.format === 'integer'
+            ? parseInt(total, 10)
+            : parseFloat(total);
         this.setState(
-            {className:"dnone", inputValue: total, displayValue: total.toString()},
+            {className:"dnone", inputValue: parsedValue, displayValue: parsedValue.toString()},
             this.proxyOnChangeOnRefWithValue(this.inputRef, total)
         );
     }
@@ -69,7 +71,9 @@ class NumericInput extends Component {
     }
 
     handleChange = (event) => {
-        const parsedValue = parseFloat(event.target.value, 10);
+        const parsedValue = this.props.format === 'integer'
+            ? parseInt(event.target.value, 10)
+            : parseFloat(event.target.value);
         const value = isNaN(parsedValue) ? 0 : parsedValue;
         const stringValue = value.toString();
         this.setState(
