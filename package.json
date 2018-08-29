@@ -46,5 +46,8 @@
   "repository": {
     "type": "git",
     "url": "git@github.com:silviajoy/numeric-input-component.git"
+  },
+  "dependencies": {
+    "prop-types": "^15.6.2"
   }
 }

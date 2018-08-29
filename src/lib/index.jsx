@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import Calculator from './Calculator'
+import PropTypes from 'prop-types'
 
 class NumericInput extends Component {
 
@@ -119,13 +120,13 @@ class NumericInput extends Component {
 
     render() {
         const props = Object.assign({}, this.props);
-        const { label: labelProps, ...inputProps } = this.sanitizeRenderProps(props);
+        const { label: labelProps, calculatorBackground: backgroundColor, labelPosition: labelPosition, calculatorKeyColor: calculatorKeyColor,  ...inputProps } = this.sanitizeRenderProps(props);
 
         return (
             <div className="numeric-input-component">
                 {   props.label 
-                    && (props.labelPosition == "top" || !props.labelPosition)
-                    && <label htmlFor={props.id}>{props.label}</label>
+                    && props.labelPosition == "top"
+                    && <label className={props.labelClassName} htmlFor={props.id}>{props.label}</label>
                 }
                 <input
                     ref={this.inputRef}
@@ -141,7 +142,7 @@ class NumericInput extends Component {
                 />
                 {   props.label 
                     && props.labelPosition == "bottom" 
-                    && <label htmlFor={props.id}>{props.label}</label>
+                    && <label className={props.labelClassName} htmlFor={props.id}>{props.label}</label>
                 } 
                 <div className={ "calculator-wrapper " + this.state.className } tabIndex="-1">
                     <Calculator
@@ -156,6 +157,26 @@ class NumericInput extends Component {
             </div>
         );
     }
+}
+
+NumericInput.propTypes = {
+    id: PropTypes.string.isRequired,
+    label: PropTypes.string,
+    labelPosition: PropTypes.oneOf(["top", "bottom"]),
+    labelClassName: PropTypes.string,
+    name: PropTypes.string,
+    className: PropTypes.string,
+    calculatorBackground: PropTypes.string,
+    calculatorKeyColor: PropTypes.string,
+    format: PropTypes.oneOf(["integer", "float"])
+
+};
+
+NumericInput.defaultProps = {
+    labelPosition: "top",
+    calculatorBackground: "#666",
+    calculatorKeyColor: "#ccc",
+    format: "float"
 }
 
 export default NumericInput;

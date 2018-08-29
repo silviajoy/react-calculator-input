@@ -2,12 +2,13 @@ import React from "react";
 import { render } from "react-dom";
 import NumericInput from "../../lib";
 import '../../lib/index.scss';
+import './styles.css'
 
 function Demo() {
   return (
-    <div>
-      <h1>Demo with examples of the component</h1>
-      <NumericInput id="myinput" label="Age" name="age" format="integer" labelPosition="bottom" />
+    <div className="calculator-input-container">
+      <h1>React Calculator Input</h1>
+      <NumericInput id="myinput" label={"Age"} name="age" />
     </div>
   );
 }
