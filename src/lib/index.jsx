@@ -14,8 +14,7 @@ class NumericInput extends Component {
     }
 
     onFocus = () => {
-        // reset calculator state everytime it gets focus
-        this.setState({className: "dflex", inputValue: 0, displayValue: '0'});
+        this.setState({className: "dflex"});
     }
 
     onComplete = () => {
@@ -69,7 +68,7 @@ class NumericInput extends Component {
     }
 
     handleChange = (event) => {
-        const parsedValue = parseInt(event.target.value, 10);
+        const parsedValue = parseFloat(event.target.value, 10);
         const value = isNaN(parsedValue) ? 0 : parsedValue;
         const stringValue = value.toString();
         this.setState(
@@ -82,8 +81,7 @@ class NumericInput extends Component {
         setTimeout(() => {
             var active = document.activeElement
             if(!active.classList.contains("calculator-wrapper") || active.id == this.props.id) {
-                // reset calculator state everytime it blurs
-                this.setState({className: "dnone", inputValue: 0, displayValue: '0'});
+                this.setState({className: "dnone"});
             }
         }, 1);
 
