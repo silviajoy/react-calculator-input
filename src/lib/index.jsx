@@ -18,7 +18,8 @@ class NumericInput extends Component {
     }
 
     onComplete = () => {
-        var total = eval(this.state.displayValue);
+        var total = eval(this.state.displayValue).toFixed(4);
+        console.log(total)
         this.setState(
             {className:"dnone", inputValue: total, displayValue: total.toString()},
             this.proxyOnChangeOnRefWithValue(this.inputRef, total)
