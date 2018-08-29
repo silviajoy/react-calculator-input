@@ -1,36 +1,36 @@
-#input {
+.numeric-input-component {
+  display: inline-block;
+
+  #input {
     font-size: 24px;
-}
+  }
 
-.dnone {
+  .dnone {
     display: none;
-}
+  }
 
-.dflex {
+  .dflex {
     display: flex;
-}
-
-.numericinput {
-    display: inline-block;
-}
-
-.numericinput input::-webkit-inner-spin-button, .numericinput input::-webkit-outer-spin-button {
+  }
+  
+  input::-webkit-inner-spin-button, input::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
     -moz-appearance:textfield;
-}
+  }
 
-.calculator-wrapper {
+  .calculator-wrapper {
     position: absolute;
     font-size: 30px;
-}
+    z-index: 10;
+  }
 
-.calculator-wrapper:focus {
+  .calculator-wrapper:focus {
     border: none;
     outline: none;
-}
+  }
 
-.calculator {
+  .calculator {
     display: flex;
     flex-direction: column;
     background-color: #666;
@@ -38,13 +38,13 @@
     border-radius: 4px;
     padding: 0.3em;
     padding-top: 0.1em;
-}
+  }
 
-.close {
+  .close {
     margin-right: .3em;
-}
+  }
 
-.close p {
+  .close p {
     text-align: right;
     color: #eee;
     font-family: sans-serif;
@@ -54,25 +54,25 @@
     float: right;
     cursor: pointer;
     width: 1em;
-}
+  }
 
-.calculator-keyboard {
+  .calculator-keyboard {
     display: flex;
-}
+  }
 
-.calculator-right {
+  .calculator-right {
     margin-left: 1em;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
     align-content: space-between;
-}
+  }
 
-.calculator-operations {
+  .calculator-operations {
     flex: 1;
-}
+  }
 
-.calculator-display .display {
+  .calculator-display .display {
     border: .08em solid #666;
     border-radius: 0;
     height: 2em;
@@ -89,37 +89,37 @@
     */
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
-}
+  }
 
-.calculator-display .display p {
+  .calculator-display .display p {
     margin: auto;
     margin-right: 0.5em;
     text-align: right;
     font-family: monospace;
     color: #666;
-}
+  }
 
-.numerickeys {
+  .numerickeys {
     display: flex;
     flex-direction: column;
 
-}
+  }
 
-.numerickeys-row {
+  .numerickeys-row {
     display: flex;
-}
+  }
 
-.numericops {
+  .numericops {
     display: flex;
     flex-direction: column;
 
-}
+  }
 
-.numericops-row {
+  .numericops-row {
     display: flex;
-}
+  }
 
-.numerickeys .button, .confirmbutton, .numericops .button {
+  .numerickeys .button, .confirmbutton, .numericops .button {
     border: .08em solid #666;
     border-radius: 10px;
     height: 2em;
@@ -128,19 +128,20 @@
     margin: .3em;
     cursor: pointer;
     background-color: #ccc;
-}
+  }
 
-.numerickeys .button:active, .confirmbutton:active, .numericops .button:active {
+  .numerickeys .button:active, .confirmbutton:active, .numericops .button:active {
     background-color: #f1f1f1;
     color: #5a5a5a;
-}
+  }
 
-.numerickeys .button p, .confirmbutton p, .numericops .button p{
+  .numerickeys .button p, .confirmbutton p, .numericops .button p{
     margin: auto;
     font-family: monospace;
-}
+  }
 
-.confirmbutton {
+  .confirmbutton {
     width: 4.76em;
     margin-bottom: auto;
+  }
 }
