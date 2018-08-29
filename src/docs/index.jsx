@@ -7,7 +7,7 @@ function Demo() {
   return (
     <div>
       <h1>Demo with examples of the component</h1>
-      <NumericInput id="myinput" label="Age" name="age"/>
+      <NumericInput id="myinput" label="Age" name="age" format="integer" />
     </div>
   );
 }
