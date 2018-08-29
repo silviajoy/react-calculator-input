@@ -60,11 +60,15 @@ class NumericInput extends Component {
         }
 
         var lastCharacter = currentVal.split('').pop()
-        if(['+', '-', '*', '/'].includes(lastCharacter)) {
-          /* avoid consecutive operation insertion */
-          if(['+', '-', '*', '/'].includes(val)) {
-              newValue = `${currentVal.slice(0,-1)}${val}`
-          }
+        if(['+', '-', '*', '/'].includes(val)) {
+            /* avoid consecutive operation insertion */
+            if(['+', '-', '*', '/'].includes(lastCharacter)) {
+                newValue = `${currentVal.slice(0,-1)}${val}`
+            }
+            /* avoid .+ situations */
+            if(lastCharacter == '.') {
+                newValue = `${currentVal}0${val}`
+            }
         } 
 
         this.setState({displayValue:newValue});
