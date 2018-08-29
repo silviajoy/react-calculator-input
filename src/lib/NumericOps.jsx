@@ -1,12 +1,12 @@
 import React from 'react'
 import KeyButton from './KeyButton'
 
-var NumericOps = ({onOperationClick}) => {
+var NumericOps = ({onOperationClick, backgroundColor}) => {
 
     var keys = []
     var values = ["+","*","-","/"]
     for (var i = 0; i < values.length; i++) {
-        keys.push(<KeyButton text={values[i]} onClick={onOperationClick} />)
+        keys.push(<KeyButton text={values[i]} onClick={onOperationClick} backgroundColor={backgroundColor} />)
     }
 
     var rows = [], size = 2;

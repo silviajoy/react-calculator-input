@@ -119,10 +119,8 @@ class NumericInput extends Component {
 
     render() {
         const props = Object.assign({}, this.props);
-        console.log(props)
         const { label: labelProps, ...inputProps } = this.sanitizeRenderProps(props);
-        
-        console.log(this.sanitizeRenderProps(props))
+
         return (
             <div className="numeric-input-component">
                 {   props.label 
@@ -151,6 +149,8 @@ class NumericInput extends Component {
                         displayValue={this.state.displayValue}
                         onChangeDisplay={this.onChangeDisplay}
                         close={this.onClose}
+                        backgroundColor={props.calculatorBackground}
+                        keyColor={props.calculatorKeyColor}
                     />
                 </div>
             </div>
