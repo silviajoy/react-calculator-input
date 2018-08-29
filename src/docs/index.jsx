@@ -1,7 +1,7 @@
 import React from "react";
 import { render } from "react-dom";
 import NumericInput from "../../lib";
-import "./styles.css";
+import '../../lib/index.scss';
 
 function Demo() {
   return (
