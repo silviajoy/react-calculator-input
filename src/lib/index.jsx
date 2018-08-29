@@ -24,7 +24,7 @@ class NumericInput extends Component {
             : parseFloat(total);
         this.setState(
             {className:"dnone", inputValue: parsedValue, displayValue: parsedValue.toString()},
-            this.proxyOnChangeOnRefWithValue(this.inputRef, total)
+            this.proxyOnChangeOnRefWithValue(this.inputRef, parsedValue)
         );
     }
 
