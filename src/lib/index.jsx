@@ -119,9 +119,16 @@ class NumericInput extends Component {
 
     render() {
         const props = Object.assign({}, this.props);
+        console.log(props)
         const { label: labelProps, ...inputProps } = this.sanitizeRenderProps(props);
+        
+        console.log(this.sanitizeRenderProps(props))
         return (
             <div className="numeric-input-component">
+                {   props.label 
+                    && (props.labelPosition == "top" || !props.labelPosition)
+                    && <label htmlFor={props.id}>{props.label}</label>
+                }
                 <input
                     ref={this.inputRef}
                     id={props.id}
@@ -134,7 +141,10 @@ class NumericInput extends Component {
                     onBlur={this.onBlur}
                     {...inputProps}
                 />
-                {props.label ? (<label htmlFor={props.id}>{props.label}</label>) : null}
+                {   props.label 
+                    && props.labelPosition == "bottom" 
+                    && <label htmlFor={props.id}>{props.label}</label>
+                } 
                 <div className={ "calculator-wrapper " + this.state.className } tabIndex="-1">
                     <Calculator
                         onComplete={this.onComplete}
