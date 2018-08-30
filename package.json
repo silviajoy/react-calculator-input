@@ -42,10 +42,10 @@
   "contributors": [
     "Luca Monfredo <luca@monfredo.it>"
   ],
-  "homepage": "https://github.com/silviajoy/numeric-input-component",
+  "homepage": "https://github.com/silviajoy/react-calculator-input",
   "repository": {
     "type": "git",
-    "url": "git@github.com:silviajoy/numeric-input-component.git"
+    "url": "git@github.com:silviajoy/react-calculator-input.git"
   },
   "dependencies": {
     "prop-types": "^15.6.2"
