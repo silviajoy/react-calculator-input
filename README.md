@@ -34,7 +34,7 @@ Other props you can play with:
 | `format` | ["float", "integer"] |  | "float"
 
 \
-**id**
+**id** \
 The value of this prop will be the `id` attribute of the `input` tag and of the `for` attribute of the `label` tag, if any.
 
 **name**
