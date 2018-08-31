@@ -15,5 +15,6 @@ input {
 
 .calculator-input-container {
     margin-left: 15em;
+    font-size: 1vw;
 }
 
