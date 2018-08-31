@@ -8,8 +8,8 @@ const Calculator = ({close, displayValue, onChangeDisplay, onComplete, backgroun
 
     return (
             <div className="calculator" style={{backgroundColor: backgroundColor}}>
-                <div className="close" onClick={close}>
-                    <p>X</p>
+                <div className="close">
+                    <p onClick={close}>X</p>
                 </div>
                 <div className="calculator-display">
                     <CalculatorDisplay text={displayValue} />
