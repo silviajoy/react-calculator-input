@@ -26,6 +26,7 @@ Other props you can play with:
 | Prop | Prop Type | Required | Default |
 | ------ | ------ |------ | ----- |
 | `id` | String | Required | 
+| `initialValue` | number |  | 0 
 | `name` | String |  |
 | `className` | String |  |
 | `label` | String |  | 
@@ -36,8 +37,11 @@ Other props you can play with:
 | `format` | ["float", "integer"] |  | "float"
 
 \
-**id**  
+**id**  \
 The value of this prop will be the `id` attribute of the `input` tag and of the `for` attribute of the `label` tag, if any.
+
+**initialValue**  \
+The initial `value` attribute of the `input` tag. Default is 0.
 
 **name**
 \
@@ -46,26 +50,26 @@ The value of this prop will be the `name` attribute of the `input` tag.
 **className**\
 The value of this prop will be the `class` attribute of the `input` tag.
 
-**label**
+**label**\
 The value of this prop will be the content of the `label` tag. 
 If you want an empty label, just type in the empty string `""` .
 
-**labelPosition**
+**labelPosition**\
 Define the position of the `label` tag in the html order. It can be either `"top"` or `"bottom"`. The default value is `"top"`. If you set `labelPosition="bottom"` the `html` will look something like this:
 
     <input id="myinput" type="number">
     <label for="myinput"> Age </label>
 
-**labelClassName**
+**labelClassName**\
 The value of this prop will be the `class` attribute of the `label` tag.
 
-**calculatorBackground**
+**calculatorBackground**\
 You should pass a `css` color property to this prop and you can set the background color of the calculator that pops up on `input` focus. Default color is `#666`
 
-**calculatorKeyColor**
+**calculatorKeyColor**\
 You should pass a `css` color property to this prop either. In this case you decide the color of the keypad keys. Default color is `#ccc`.
 
-**format**
+**format**\
 With this prop you decide if the input value will accept `"float"`ing point numbers or `"integer"`s only. Default value is `"float"`.
 
 
