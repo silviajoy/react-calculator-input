@@ -8,7 +8,7 @@ function Demo() {
   return (
     <div className="calculator-input-container">
       <h1>React Calculator Input</h1>
-      <NumericInput id="myinput" label={"Age"} name="age" />
+      <NumericInput id="myinput" label={"Age"} name="age" initialValue={"10"} />
     </div>
   );
 }

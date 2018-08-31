@@ -15,7 +15,10 @@ class NumericInput extends Component {
     }
 
     onFocus = () => {
-        this.setState({className: "dflex"});
+        parsedValue = this.props.format === 'integer'
+            ? parseInt(event.target.value, 10)
+            : parseFloat(event.target.value);
+        this.setState({className: "dflex", displayValue: parsedValue});
     }
 
     onComplete = () => {
