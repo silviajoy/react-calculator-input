@@ -1,31 +1,46 @@
-import React from 'react'
-import KeyButton from './KeyButton'
+import React from 'react';
+import PropTypes from 'prop-types';
 
-var NumericOps = ({onOperationClick, backgroundColor}) => {
+import KeyButton from './KeyButton';
 
-    var keys = []
-    var values = ["+","*","-","/"]
-    for (var i = 0; i < values.length; i++) {
-        keys.push(<KeyButton text={values[i]} onClick={onOperationClick} backgroundColor={backgroundColor} />)
-    }
+const numericOpsClassMap = {
+  '+': 'plus',
+  '*': 'times',
+  '-': 'minus',
+  '/': 'divide',
+};
 
-    var rows = [], size = 2;
+var NumericOps = ({ className, onOperationClick }) => {
+  const keys = Object.entries(numericOpsClassMap).map(([sign, string]) => (
+    <KeyButton
+      key={`numeric-ops-${string}`}
+      text={sign}
+      onClick={onOperationClick}
+      className={`num-op-${string}`}
+    />
+  ));
 
-    while (keys.length > 0)
-        rows.push(keys.splice(0, size));
+  var rows = [],
+    size = 2;
 
-    return (
-      <div className="numericops">
-        <div className="numericops-row">
-            {rows[0]}
-        </div>
+  while (keys.length > 0) rows.push(keys.splice(0, size));
 
-        <div className="numericops-row">
-            {rows[1]}
-        </div>
+  return (
+    <div className="numericops">
+      <div className="numericops-row">{rows[0]}</div>
 
-      </div>
-    )
-  }
+      <div className="numericops-row">{rows[1]}</div>
+    </div>
+  );
+};
+
+NumericOps.propTypes = {
+  onOperationClick: PropTypes.func.isRequired,
+  className: PropTypes.string,
+};
+
+NumericOps.defaultProps = {
+  className: '',
+};
 
 export default NumericOps;

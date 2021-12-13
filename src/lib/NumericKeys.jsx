@@ -1,39 +1,61 @@
-import React from 'react'
-import KeyButton from './KeyButton'
+import React from 'react';
+import PropTypes from 'prop-types';
+import KeyButton from './KeyButton';
+import classnames from 'classnames';
 
-const NumericKeys = ({onNumberClick, leftKey, rightKey, backgroundColor}) => {
-    
-    var keys = []
-    var values = [1,2,3,4,5,6,7,8,9,leftKey,0,rightKey]
-    for (var i = 0; i < values.length; i++) {
-        keys.push(<KeyButton text={values[i]} onClick={onNumberClick} backgroundColor={backgroundColor} />)
-    }
+const numericKeysClassMap = {
+  '.': 'num-key-left',
+  CE: 'num-key-right',
+  0: 'num-key-zero',
+  1: 'num-key-one',
+  2: 'num-key-two',
+  3: 'num-key-three',
+  4: 'num-key-four',
+  5: 'num-key-five',
+  6: 'num-key-six',
+  7: 'num-key-seven',
+  8: 'num-key-eight',
+  9: 'num-key-nine',
+};
 
-    var rows = [], size = 3;
+const numericKeysOrder = [1, 2, 3, 4, 5, 6, 7, 8, 9, '.', 0, 'CE'];
 
-    while (keys.length > 0)
-        rows.push(keys.splice(0, size));
+const NumericKeys = ({ onNumberClick, className }) => {
+  const unused = 'error';
+  const keys = numericKeysOrder.map((key) => (
+    <KeyButton
+      key={`num-key-${numericKeysClassMap[key]}`}
+      text={`${key}`}
+      onClick={onNumberClick}
+      className={classnames(numericKeysClassMap[key], className)}
+    />
+  ));
 
-    return (
-      <div className="numerickeys">
-        <div className="numerickeys-row">
-            {rows[0]}
-        </div>
+  var rows = [],
+    size = 3;
 
-        <div className="numerickeys-row">
-            {rows[1]}
-        </div>
+  while (keys.length > 0) rows.push(keys.splice(0, size));
 
-        <div className="numerickeys-row">
-            {rows[2]}
-        </div>
+  return (
+    <div className="numerickeys">
+      <div className="numerickeys-row">{rows[0]}</div>
 
-        <div className="numerickeys-row">
-            {rows[3]}
-        </div>
+      <div className="numerickeys-row">{rows[1]}</div>
 
-      </div>
-    )
-  }
+      <div className="numerickeys-row">{rows[2]}</div>
+
+      <div className="numerickeys-row">{rows[3]}</div>
+    </div>
+  );
+};
+
+NumericKeys.propTypes = {
+  className: PropTypes.string,
+  onNumberClick: PropTypes.func.isRequired,
+};
+
+NumericKeys.defaultProps = {
+  className: '',
+};
 
 export default NumericKeys;
