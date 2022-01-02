@@ -1,188 +1,246 @@
-import React, { Component } from "react"
-import Calculator from './Calculator'
-import PropTypes from 'prop-types'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import classnames from 'classnames';
+
+import Calculator from './Calculator';
+import calc from './calc';
+
+const keyCodeSelectorMap = {
+  Backspace: '.num-key-right',
+  '.': '.num-key-left',
+  '=': '.confirmbutton',
+  Enter: '.confirmbutton',
+  enter: '.confirmbutton',
+  '+': '.num-op-plus',
+  '-': '.num-op-minus',
+  '*': '.num-op-times',
+  '/': '.num-op-divide',
+  //"F9": "+/-",
+  //"A": "AC",
+  //"a": "AC",
+  Escape: '.close button',
+  //"C": "CE",
+  //"c": "CE",
+  0: '.num-key-zero',
+  1: '.num-key-one',
+  2: '.num-key-two',
+  3: '.num-key-three',
+  4: '.num-key-four',
+  5: '.num-key-five',
+  6: '.num-key-six',
+  7: '.num-key-seven',
+  8: '.num-key-eight',
+  9: '.num-key-nine',
+};
 
 class NumericInput extends Component {
+  constructor(props) {
+    super(props);
+    const initialValue = `${this.props.initialValue}`;
+    this.state = {
+      isVisible: false,
+      inputValue: initialValue,
+      internalValue: initialValue,
+      displayValue: initialValue,
+    };
+    this.inputRef = React.createRef();
+    this.calcRef = React.createRef();
+    this.hydrateCalcBuffer(initialValue);
+  }
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            className: "dnone",
-            inputValue: this.props.initialValue,
-            displayValue: "0",
-        };
-        this.inputRef = React.createRef();
+
+  componentDidMount() {
+    document.body.addEventListener('keyup', this.onKeyUp);
+  }
+
+  componentWillUnmount() {
+    document.body.removeEventListener('keyup', this.onKeyUp);
+    clearTimeout(this.blurTimeout);
+  }
+
+  handleComplete = () => {
+    calc['=']();
+    this.setState(
+      {
+        isVisible: false,
+        inputValue: calc.getResult(),
+        displayValue: calc.getSteps(),
+      },
+      () => {
+        this.proxyOnChangeOnRefWithValue(this.inputRef, this.state.inputValue);
+      },
+    );
+
+    const inputEl = this.inputRef.current;
+    inputEl.blur();
+  };
+
+  handleChange = (event) => {
+    const parsedValue = parseFloat(event.target.value);
+    const value = isNaN(parsedValue) ? 0 : parsedValue;
+    const stringValue = value.toString();
+    this.setState(
+      {
+        inputValue: value,
+        displayValue: stringValue,
+      },
+      () => {
+        this.moveCursorToEnd(this.state);
+        this.proxyOnChangeOnRefWithValue(this.inputRef, value);
+      },
+    );
+  };
+
+  blurTimeout = 0;
+  handleBlur = () => {
+    this.blurTimeout = setTimeout(() => {
+      var active = document.activeElement;
+      if (!active.classList.contains('calculator-wrapper') || active.id == this.props.id) {
+        this.setState({ isVisible: false });
+      }
+    }, 1);
+  };
+
+  handleClose = () => {
+    const inputEl = this.inputRef.current;
+    inputEl.blur();
+    this.setState({ isVisible: false });
+  };
+
+  hydrateCalcBuffer(value) {
+    calc['AC']();
+    let calcBuffer = [...`${value}`];
+    while (calcBuffer.length) calc[calcBuffer.shift()]();
+  }
+
+  moveCursorToEnd(state) {
+    const length = 1 + new String(state.inputValue).length;
+    this.inputRef.current.setSelectionRange(length, length);
+  }
+
+  handleFocus = (event) => {
+    var parsedValue = parseFloat(event.target.value);
+    this.hydrateCalcBuffer(parsedValue);
+    this.setState({
+      isVisible: true,
+    });
+  };
+
+  onKeyUp = (event) => {
+    if (!this.state.isVisible) {
+      return;
     }
 
-    onFocus = (event) => {
-        var parsedValue = this.props.format === 'integer'
-            ? parseInt(event.target.value, 10)
-            : parseFloat(event.target.value);
-        this.setState({className: "dflex", displayValue: parsedValue.toString()});
+    var keyCode = event.key;
+    if (keyCode in keyCodeSelectorMap) {
+      event.preventDefault();
 
+      const el = this.calcRef.current.querySelector(keyCodeSelectorMap[keyCode]);
+      if (!el) {
+        throw new Error('react-calculator-input: Key binding missing!');
+      }
+
+      const clickEvent = new Event('click', {
+        bubbles: true,
+        target: { value: el, enumerable: true, writable: true },
+      });
+      el.dispatchEvent(clickEvent);
     }
+  };
 
-    onComplete = () => {
-        var total = eval(this.state.displayValue).toFixed(4);
-        const parsedValue = this.props.format === 'integer'
-            ? parseInt(total, 10)
-            : parseFloat(total);
-        this.setState(
-            {className:"dnone", inputValue: parsedValue, displayValue: parsedValue.toString()},
-            this.proxyOnChangeOnRefWithValue(this.inputRef, parsedValue)
-        );
-    }
+  proxyOnChangeOnRefWithValue = (ref, value) => {
+    if (typeof this.props.onChange !== 'function') return;
+    const event = new Event('change', { bubbles: true });
+    Object.defineProperty(event, 'target', {
+      value: ref.current,
+      enumerable: true,
+      writable: true,
+    });
+    event.target.value = value.toString();
+    this.props.onChange(event);
+  };
 
-    onChangeDisplay = (val) => {
-        var currentVal = this.state.displayValue
-        var newValue = val.toString()
+  sanitizeRenderProps = ({ ...props }) => {
+    delete props.ref;
+    delete props.type;
+    delete props.handleFocus;
+    delete props.onChange;
+    delete props.handleBlur;
+    delete props.initialValue;
+    return props;
+  };
 
+  handleChange = (val) => {
+    this.setState({
+      displayValue: calc.getSteps(),
+    });
+  };
 
-        /* delete */
-        if(val==='<') {
-            newValue = currentVal.slice(0,-1)
-            /* avoid blank screen */
-            if(newValue == '') {
-                newValue = '0'
-            }
-            this.setState({displayValue: newValue});
-            return
-        }
+  render() {
+    const props = Object.assign({}, this.props);
+    const {
+      label: labelProps,
+      labelPosition: labelPosition,
+      ...inputProps
+    } = this.sanitizeRenderProps(props);
 
-        /* avoid double . insertion */
-        var lastNumber = currentVal.split(/\-|\+|\/|\*/).pop()
-        if(val==='.' && lastNumber.includes(".")){
-            return
-        }
+    this.sanitizeRenderProps(props);
 
-        /* if it's not the first character or if next value is . */  
-        if (currentVal != '0' || val == '.') {
-            if(currentVal == '') {
-                newValue = `0${val}`
-            } else {
-                newValue = `${currentVal}${val}`;    
-            }
-        }
+    const className = this.state.isVisible ? 'dflex' : 'dnone';
+    const label = (
+      <label className={classnames('label', props.labelClassName)} htmlFor={props.id}>
+        {props.label}
+      </label>
+    );
 
-        var lastCharacter = currentVal.split('').pop()
-        if(['+', '-', '*', '/'].includes(val)) {
-            /* avoid consecutive operation insertion */
-            if(['+', '-', '*', '/'].includes(lastCharacter)) {
-                newValue = `${currentVal.slice(0,-1)}${val}`
-            }
-            /* avoid .+ situations */
-            if(lastCharacter == '.') {
-                newValue = `${currentVal}0${val}`
-            }
-        } 
-
-        this.setState({displayValue:newValue});
-    }
-
-    handleChange = (event) => {
-        const parsedValue = this.props.format === 'integer'
-            ? parseInt(event.target.value, 10)
-            : parseFloat(event.target.value);
-        const value = isNaN(parsedValue) ? 0 : parsedValue;
-        const stringValue = value.toString();
-        this.setState(
-            {inputValue: value, displayValue: stringValue},
-            this.proxyOnChangeOnRefWithValue(this.inputRef, value)
-        );
-    }
-
-    onBlur = () => {
-        setTimeout(() => {
-            var active = document.activeElement
-            if(!active.classList.contains("calculator-wrapper") || active.id == this.props.id) {
-                this.setState({className: "dnone"});
-            }
-        }, 1);
-
-    }
-
-    onClose = () => {
-        this.setState({className:"dnone"})
-    }
-
-    proxyOnChangeOnRefWithValue = (ref, value) => {
-        if (typeof this.props.onChange !== 'function') return;
-        const event = new Event('change', { bubbles: true });
-        Object.defineProperty(event, 'target', {value: ref.current, enumerable: true, writable: true});
-        event.target.value = value.toString();
-        this.props.onChange(event);
-    }
-
-    sanitizeRenderProps = (props) => {
-        delete props.ref;
-        delete props.type;
-        delete props.onFocus;
-        delete props.onChange;
-        delete props.onBlur;
-        return props;
-    }
-
-    render() {
-        const props = Object.assign({}, this.props);
-        const { label: labelProps, calculatorBackground: backgroundColor, labelPosition: labelPosition, calculatorKeyColor: calculatorKeyColor,  ...inputProps } = this.sanitizeRenderProps(props);
-
-        return (
-            <div className="numeric-input-component">
-                {   props.label 
-                    && props.labelPosition == "top"
-                    && <label className={props.labelClassName} htmlFor={props.id}>{props.label}</label>
-                }
-                <input
-                    ref={this.inputRef}
-                    id={props.id}
-                    className={props.className}
-                    type="number"
-                    name={props.name}
-                    onFocus={this.onFocus}
-                    value={this.state.inputValue}
-                    onChange={this.handleChange}
-                    onBlur={this.onBlur}
-                    {...inputProps}
-                />
-                {   props.label 
-                    && props.labelPosition == "bottom" 
-                    && <label className={props.labelClassName} htmlFor={props.id}>{props.label}</label>
-                } 
-                <div className={ "calculator-wrapper " + this.state.className } tabIndex="-1">
-                    <Calculator
-                        onComplete={this.onComplete}
-                        displayValue={this.state.displayValue}
-                        onChangeDisplay={this.onChangeDisplay}
-                        close={this.onClose}
-                        backgroundColor={props.calculatorBackground}
-                        keyColor={props.calculatorKeyColor}
-                    />
-                </div>
-            </div>
-        );
-    }
+    return (
+      <div className="numeric-input-component">
+        {props.label && props.labelPosition == 'top' && label}
+        <input
+          className={props.className}
+          onBlur={this.handleBlur}
+          id={props.id}
+          name={props.name}
+          onChange={this.handleChange}
+          onFocus={this.handleFocus}
+          readOnly
+          ref={this.inputRef}
+          type="text"
+          value={this.state.inputValue}
+          {...inputProps}
+        />
+        {props.label && props.labelPosition == 'bottom' && label}
+        <div
+          ref={this.calcRef}
+          className={classnames('calculator-wrapper', className)}
+          tabIndex="-1"
+        >
+          <Calculator
+            onClose={this.handleClose}
+            displayValue={this.state.displayValue}
+            onChange={this.handleChange}
+            onComplete={this.handleComplete}
+          />
+        </div>
+      </div>
+    );
+  }
 }
 
 NumericInput.propTypes = {
-    id: PropTypes.string.isRequired,
-    initialValue: PropTypes.number,
-    label: PropTypes.string,
-    labelPosition: PropTypes.oneOf(["top", "bottom"]),
-    labelClassName: PropTypes.string,
-    name: PropTypes.string,
-    className: PropTypes.string,
-    calculatorBackground: PropTypes.string,
-    calculatorKeyColor: PropTypes.string,
-    format: PropTypes.oneOf(["integer", "float"])
-
+  className: PropTypes.string,
+  id: PropTypes.string.isRequired,
+  initialValue: PropTypes.number,
+  label: PropTypes.string,
+  labelClassName: PropTypes.string,
+  labelPosition: PropTypes.oneOf(['top', 'bottom']),
+  name: PropTypes.string,
+  onChange: PropTypes.func,
 };
 
 NumericInput.defaultProps = {
-    labelPosition: "top",
-    calculatorBackground: "#666",
-    calculatorKeyColor: "#ccc",
-    format: "float",
-    initialValue: 0
-}
+  labelPosition: 'top',
+  initialValue: 0,
+};
 
 export default NumericInput;
